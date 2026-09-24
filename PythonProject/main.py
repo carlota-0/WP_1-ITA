@@ -1,84 +1,75 @@
 class Aircraft:
-    name: str
-
-    # Pesos y geometría
-    mlw: float          # Max Landing Weight (tons)
-    max_weight: float   # Max Weight (tons)
-    max_payload: float  # Max Payload (tons)
-    s: float            # Superficie alar S (m^2)
-
-    # Coeficientes de arrastre - aproximación (flaps/gear out)
-    cd0_app: float
-    cd2_app: float
-
-    # Coeficientes de arrastre - configuración limpia
-    cd0_clean: float
-    cd2_clean: float
-
-    # Descenso
-    hp_desc: float       # Altitud de transición de descenso (ft)
-    ct_desc_high: float
-    ct_desc_low: float
-    ct_desc_app: float
-
-    # Modelo de empuje (thrust)
-    ct1: float   # N
-    ct2: float   # ft
-    ct3: float   # 1/ft^2
-
-    # Modelo de consumo de combustible (fuel flow)
-    cf1: float   # kg/(min*kN)
-    cf2: float   # kt
+    def __init__(self, name, mlw, max_weight, max_payload, s,
+                 cd0_app, cd2_app, cd0_clean, cd2_clean,
+                 hp_desc, ct_desc_high, ct_desc_low, ct_desc_app,
+                 ct1, ct2, ct3, cf1, cf2):
+        self.name = name
+        self.mlw = mlw
+        self.max_weight = max_weight
+        self.max_payload = max_payload
+        self.s = s
+        self.cd0_app = cd0_app
+        self.cd2_app = cd2_app
+        self.cd0_clean = cd0_clean
+        self.cd2_clean = cd2_clean
+        self.hp_desc = hp_desc
+        self.ct_desc_high = ct_desc_high
+        self.ct_desc_low = ct_desc_low
+        self.ct_desc_app = ct_desc_app
+        self.ct1 = ct1
+        self.ct2 = ct2
+        self.ct3 = ct3
+        self.cf1 = cf1
+        self.cf2 = cf2
 
 
 aircraft_list = [
     Aircraft(
         name="B767-300ER",
-        mlw=145.150, max_weight=204.10, max_payload=46.500, s=283.50,
-        cd0_app=0.014000, cd2_app=0.049000,
-        cd0_clean=0.017400, cd2_clean=0.045900,
-        hp_desc=26418, ct_desc_high=0.064359, ct_desc_low=0.055988, ct_desc_app=0.12475,
+        mlw=0.145150e3, max_weight=0.20410e3, max_payload=0.46500e2, s=0.28350e3,
+        cd0_app=0.14000e-1, cd2_app=0.49000e-1,
+        cd0_clean=0.17400e-1, cd2_clean=0.45900e-1,
+        hp_desc=26418, ct_desc_high=0.64359e-1, ct_desc_low=0.55988e-1, ct_desc_app=0.12475e0,
         ct1=0.35167e6, ct2=0.44673e5, ct3=0.10129e-9,
-        cf1=0.54005, cf2=0.55782e3,
+        cf1=0.54005e0, cf2=0.55782e3,
     ),
     Aircraft(
         name="B777-300",
-        mlw=237.680, max_weight=299.30, max_payload=64.900, s=428.04,
-        cd0_app=0.017300, cd2_app=0.048400,
-        cd0_clean=0.015700, cd2_clean=0.042000,
-        hp_desc=36122, ct_desc_high=0.044239, ct_desc_low=0.041065, ct_desc_app=0.092921,
+        mlw=0.237680e3, max_weight=0.29930e3, max_payload=0.64900e2, s=0.42804e3,
+        cd0_app=0.17300e-1, cd2_app=0.48400e-1,
+        cd0_clean=0.15700e-1, cd2_clean=0.42000e-1,
+        hp_desc=36122, ct_desc_high=0.44239e-1, ct_desc_low=0.41065e-1, ct_desc_app=0.92921e-1,
         ct1=0.42577e6, ct2=0.48987e5, ct3=0.66146e-10,
-        cf1=0.87843, cf2=0.36897e4,
+        cf1=0.87843e0, cf2=0.36897e4,
     ),
     Aircraft(
         name="B737",
-        mlw=51.710, max_weight=70.80, max_payload=16.920, s=124.65,
-        cd0_app=0.027000, cd2_app=0.044100,
-        cd0_clean=0.023500, cd2_clean=0.044500,
-        hp_desc=30152, ct_desc_high=0.036336, ct_desc_low=0.053395, ct_desc_app=0.16440,
+        mlw=0.51710e2, max_weight=0.70800e2, max_payload=0.16920e2, s=0.12465e3,
+        cd0_app=0.27000e-1, cd2_app=0.44100e-1,
+        cd0_clean=0.23500e-1, cd2_clean=0.44500e-1,
+        hp_desc=30152, ct_desc_high=0.36336e-1, ct_desc_low=0.53395e-1, ct_desc_app=0.16440e0,
         ct1=0.14573e6, ct2=0.55638e5, ct3=0.14200e-10,
-        cf1=0.94680, cf2=0.10000e15,
+        cf1=0.94680e0, cf2=0.10000e15,
     ),
     Aircraft(
         name="A320-212",
-        mlw=64.500, max_weight=77.00, max_payload=21.500, s=122.60,
-        cd0_app=0.024200, cd2_app=0.046900,
-        cd0_clean=0.024000, cd2_clean=0.037500,
-        hp_desc=12398, ct_desc_high=0.045711, ct_desc_low=0.027207, ct_desc_app=0.13981,
+        mlw=0.64500e2, max_weight=0.77000e2, max_payload=0.21500e2, s=0.12260e3,
+        cd0_app=0.24200e-1, cd2_app=0.46900e-1,
+        cd0_clean=0.24000e-1, cd2_clean=0.37500e-1,
+        hp_desc=12398, ct_desc_high=0.45711e-1, ct_desc_low=0.27207e-1, ct_desc_app=0.13981e0,
         ct1=0.13605e6, ct2=0.52238e5, ct3=0.26637e-10,
-        cf1=0.94000, cf2=0.10000e6,
+        cf1=0.94000e0, cf2=0.10000e6,
     ),
     Aircraft(
         name="A319-131",
-        mlw=61.000, max_weight=70.00, max_payload=17.000, s=122.60,
-        cd0_app=0.028400, cd2_app=0.037600,
-        cd0_clean=0.028000, cd2_clean=0.031000,
-        hp_desc=27726, ct_desc_high=0.083084, ct_desc_low=0.051765, ct_desc_app=0.14767,
+        mlw=0.61000e2, max_weight=0.70000e2, max_payload=0.17000e2, s=0.12260e3,
+        cd0_app=0.28400e-1, cd2_app=0.37600e-1,
+        cd0_clean=0.28000e-1, cd2_clean=0.31000e-1,
+        hp_desc=27726, ct_desc_high=0.83084e-1, ct_desc_low=0.51765e-1, ct_desc_app=0.14767e0,
         ct1=0.13900e6, ct2=0.58900e5, ct3=0.57200e-14,
-        cf1=0.68800, cf2=0.16700e4,
+        cf1=0.68800e0, cf2=0.16700e4,
     ),
 ]
-
 
 if __name__ == "__main__":
     for ac in aircraft_list:
