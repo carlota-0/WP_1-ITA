@@ -137,27 +137,5 @@ aircraft_list = [
     ),
 ]
 
-resultados = {}
 
-for aircraft in aircraft_list:
-    for pct in [100, 80]:
-        max_weight = aircraft.mlw * (pct / 100)
-        x_vals, h_vals = simulador(aircraft, max_weight)
-
-        key = f"{aircraft.name}_{pct}"
-        resultados[key] = (x_vals, h_vals)
-
-        plt.plot(x_vals, h_vals, label=f"{aircraft.name} [{pct}% MLW]")
-
-plt.xlabel("x [m]")
-plt.ylabel("h [m]")
-plt.legend()
-plt.show()
-
-"""
-si queremos reutilizar las datas de simulador:
-
-x_b737_100, h_b737_100 = resultados["B737_100"]
-
-"""
 
