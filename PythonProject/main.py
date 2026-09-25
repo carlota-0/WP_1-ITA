@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+from funcions import *
 class Aircraft:
     def __init__(self, name, mlw, max_weight, max_payload, s,
                  cd0_app, cd2_app, cd0_clean, cd2_clean,
@@ -22,6 +24,7 @@ class Aircraft:
         self.cf1 = cf1
         self.cf2 = cf2
 
+""" Decidí pasarlo directamente a la hora de añadirlos a la lista; en vez de hacer las funciones, será más eficiente"""
 
 TON_TO_KG = 1000.0
 FT_TO_M   = 0.3048
@@ -29,6 +32,7 @@ KT_TO_MS  = 0.514444
 MIN_TO_S  = 60.0
 KN_TO_N   = 1000.0
 
+""" La lista de aviones con todos los datos en SI"""
 
 aircraft_list = [
     Aircraft(
@@ -133,6 +137,27 @@ aircraft_list = [
     ),
 ]
 
-if __name__ == "__main__":
-    for ac in aircraft_list:
-        print(f"{ac.name}: MTOW={ac.max_weight} t, S={ac.s} m^2, CD0_clean={ac.cd0_clean}")
+resultados = {}
+
+for aircraft in aircraft_list:
+    for pct in [100, 80]:
+        max_weight = aircraft.mlw * (pct / 100)
+        x_vals, h_vals = simulador(aircraft, max_weight)
+
+        key = f"{aircraft.name}_{pct}"
+        resultados[key] = (x_vals, h_vals)
+
+        plt.plot(x_vals, h_vals, label=f"{aircraft.name} [{pct}% MLW]")
+
+plt.xlabel("x [m]")
+plt.ylabel("h [m]")
+plt.legend()
+plt.show()
+
+"""
+si queremos reutilizar las datas de simulador:
+
+x_b737_100, h_b737_100 = resultados["B737_100"]
+
+"""
+
