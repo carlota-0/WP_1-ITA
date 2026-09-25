@@ -139,3 +139,10 @@ aircraft_list = [
 
 
 
+#Prueba funcion Presion
+h = 10058
+p_10058 = presion (h)
+print(p_10058)
+
+d_10058 = densidad(h)
+print(d_10058)
