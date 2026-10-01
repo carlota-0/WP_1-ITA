@@ -146,3 +146,10 @@ print(p_10058)
 
 d_10058 = densidad(h)
 print(d_10058)
+
+# Prueba funcion Thrust de descenso
+avion_prueba = aircraft_list[0] #escollim un avió qualsevol de la llista (B767-300ER)   |Tram alt>=8.052m, 8.052m<Tram mitjà<1828m
+altura_prueba = 1000  # metres                                                                   26.418 peus                6000 peus
+
+thrust_prueba = calcular_thrust_desc(altura_prueba, avion_prueba)
+print(f"El Thrust de descenso para el {avion_prueba.name} a {altura_prueba} m es: {thrust_prueba:.3f} N")
