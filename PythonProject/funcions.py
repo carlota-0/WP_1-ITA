@@ -59,9 +59,9 @@ def densidad(h_metros):
     p = presion(h_metros)
 
     # Calculo final de la presion
-    densidad = p / (R * T)
+    densidad_val = p / (R * T)
 
-    return densidad
+    return densidad_val
 
 
 """Calcula el Thrust de descenso (T_desc) en Newton"""
@@ -85,3 +85,72 @@ def calcular_thrust_desc(h_metros, avion):
     t_desc = c_tdesc * t_max
 
     return t_desc
+
+def calcular_Vmin_ROD(h, m, T, aircraft):
+
+    g = 9.80665
+    h_app = 6000 * 0.3048
+
+    # 1. Elegir CD0 y CD2 según la fase (limpio o aproximación)
+    if h > h_app:
+        CD0, CD2 = aircraft.cd0_clean, aircraft.cd2_clean
+    else:
+        CD0, CD2 = aircraft.cd0_app, aircraft.cd2_app
+
+    # 2. Calcular Vmin_ROD
+    mg = m * g
+    ratio = T / mg
+    raiz_interna = (ratio ** 2 + 12 * CD0 * CD2) ** 0.5
+    factor = (ratio + raiz_interna) / (3 * CD0)
+
+    V = ((mg / (aircraft.s * densidad(h))) * factor) ** 0.5
+
+    return V
+
+def componentesV(V, h, m, T, aircraft):
+
+    g = 9.80665
+    h_app = 6000 * 0.3048
+    rho = densidad(h)
+
+    if h > h_app:
+        CD0, CD2 = aircraft.cd0_clean, aircraft.cd2_clean
+    else:
+        CD0, CD2 = aircraft.cd0_app, aircraft.cd2_app
+
+    CL = (m * g) / (0.5 * rho * V**2 * aircraft.s)
+    CD = CD0 + CD2 * CL**2
+    D = 0.5 * rho * V**2 * aircraft.s * CD
+
+    gamma = math.asin((T - D) / (m * g))
+
+    Vx = V * math.cos(gamma)
+    Vh = -V * math.sin(gamma)   # negativo porque desciende
+
+    return Vx, Vh
+"""SIMULADOR"""
+def simulador(aircraft, max_weight):
+    h_iaf = 1828.8
+    h_max = 12192.0
+    dt = 1.0
+    m = max_weight
+    h = h_iaf
+    x = 0.0
+
+    x_list = [x]
+    h_list = [h]
+
+    while h < h_max:
+        T_desc = calcular_thrust_desc(h, aircraft)
+        V = calcular_Vmin_ROD(h, m, T_desc, aircraft)
+        Vx, Vh = componentesV(V, h, m, T_desc, aircraft)
+
+        m = actualizar_masa(V, T_desc, m, aircraft)
+
+        x = x - Vx * dt
+        h = h + Vh * dt      # <-- corregido
+
+        x_list.append(x)
+        h_list.append(h)
+
+    return x_list, h_list
