@@ -62,3 +62,26 @@ def densidad(h_metros):
     densidad = p / (R * T)
 
     return densidad
+
+
+"""Calcula el Thrust de descenso (T_desc) en Newton"""
+
+def calcular_thrust_desc(h_metros, avion):
+    # 1. Calculamos T_max con la formula de las diapositivas
+    t_max = avion.ct1 * (1 - (h_metros / avion.ct2) + avion.ct3 * (h_metros ** 2)) # Això dibuixa la corba de thrust max. disponible en funció de l'alçada actual.
+
+    # 2. Determinamos qué coeficiente C_Tdesc usar según la altitud
+    altitud_app_metros = 6000 * 0.3048 #de peus a metres
+
+# per entendre els if elif else, tinguem en compte que avion.hp_desc és l'altitut de transició de descens de la taula que varia segons el model de l'avió
+    if h_metros > avion.hp_desc: # Volant per sobre l'alçada de transició de l'avio utilitzem la configuració alta.
+        c_tdesc = avion.ct_desc_high
+    elif h_metros > altitud_app_metros: # Un cop sabem que està per sota aquella alçada preguntem si està per sobre dels 6000 peus
+        c_tdesc = avion.ct_desc_low
+    else: # si arriba aquí sabem que l'avió està per sota de 6000 peus
+        c_tdesc = avion.ct_desc_app
+
+    # 3. Calculamos el thrus real que tendrá el avión den ese momento dependiendo del coeficiente que hayamos usado
+    t_desc = c_tdesc * t_max
+
+    return t_desc
