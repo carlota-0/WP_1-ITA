@@ -156,26 +156,60 @@ print(f"El Thrust de descenso para el {avion_prueba.name} a {altura_prueba} m es
 
 """
 
+escenario_1 = [
+    {"modelo": "B767-300ER", "star": "ALBER1Z", "pct_mlw": 80, "dist_km": 129.08},
+    {"modelo": "B737", "star": "PUMAL1Z", "pct_mlw": 100, "dist_km": 94.45},
+    {"modelo": "B777-300", "star": "MARTA3Z", "pct_mlw": 100, "dist_km": 178.35},
+    {"modelo": "B767-300ER", "star": "MATEX3Z", "pct_mlw": 80, "dist_km": 190.02},
+    {"modelo": "A319-131", "star": "LOBAR2W", "pct_mlw": 80, "dist_km": 151.31},
+    {"modelo": "A320-212", "star": "CASPE2W", "pct_mlw": 100, "dist_km": 164.09}
+]
+
+aircraft_dict = {ac.name: ac for ac in aircraft_list}
+
 resultados = {}
 
-for aircraft in aircraft_list:
-    for pct in [100, 80]:
-        max_weight = aircraft.mlw * (pct / 100)
-        x_vals, h_vals = simulador(aircraft, max_weight)
+# Imprimimos la cabecera de la consola
+print(f"{'Aircraft':<12} | {'STAR':<8} | {'%MLW':<4} | {'Dist [km]':<9} | {'Alt Entry [m]':<13} | {'Time to IAF [s]'}")
+print("-" * 80)
 
-        key = f"{aircraft.name}_{pct}"
-        resultados[key] = (x_vals, h_vals)
+# Preparamos la gráfica
+plt.figure(figsize=(10, 6))
 
-        plt.plot(x_vals, h_vals, label=f"{aircraft.name} [{pct}% MLW]")
+for vuelo in escenario_1:
+    ac = aircraft_dict[vuelo["modelo"]]
+    max_weight = ac.mlw * (vuelo["pct_mlw"] / 100.0)
+
+    # Extraemos las listas enteras para graficar y los datos concretos para la tabla
+    x_vals, h_vals, t_entry, alt_entry = simulador(ac, max_weight, vuelo["dist_km"])
+
+    # Guardamos los vectores en tu diccionario de resultados modificado para las rutas exactas
+    key = f"{ac.name}_{vuelo['pct_mlw']}_{vuelo['star']}"
+    resultados[key] = (x_vals, h_vals)
+
+    # Imprimimos la fila de resultados
+    if t_entry is not None:
+        print(
+            f"{vuelo['modelo']:<12} | {vuelo['star']:<8} | {vuelo['pct_mlw']:<4} | {vuelo['dist_km']:<9.2f} | {alt_entry:<13.1f} | {t_entry:<10}")
+    else:
+        print(
+            f"{vuelo['modelo']:<12} | {vuelo['star']:<8} | {vuelo['pct_mlw']:<4} | {vuelo['dist_km']:<9.2f} | {'> FL400':<13} | {'N/A'}")
+
+    # Plot iterativo
+    etiqueta = f"{vuelo['modelo']} [{vuelo['pct_mlw']}%] - {vuelo['star']}"
+    plt.plot(x_vals, h_vals, label=etiqueta)
 
 plt.xlabel("x [m]")
 plt.ylabel("h [m]")
-plt.legend()
+plt.title("Perfiles de Descenso CDO - Escenario 1 (LEBL)")
+plt.legend(loc="upper left", bbox_to_anchor=(1, 1))
+plt.grid(True)
+plt.tight_layout()
 plt.show()
 
 """
 si queremos reutilizar las datas de simulador:
 
-x_b737_100, h_b737_100 = resultados["B737_100"]
+x_b737_100_pumal, h_b737_100_pumal = resultados["B737_100_PUMAL1Z"]
 
 """

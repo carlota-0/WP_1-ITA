@@ -129,7 +129,8 @@ def componentesV(V, h, m, T, aircraft):
 
     return Vx, Vh
 """SIMULADOR"""
-def simulador(aircraft, max_weight):
+
+def simulador(aircraft, max_weight, distancia_star_km):
     h_iaf = 1828.8
     h_max = 12192.0
     dt = 1.0
@@ -137,8 +138,14 @@ def simulador(aircraft, max_weight):
     h = h_iaf
     x = 0.0
 
+    distancia_objetivo_m = distancia_star_km * 1000.0
+
     x_list = [x]
     h_list = [h]
+
+    tiempo_wp = None
+    altitud_wp = None
+    segundos_totales = 0
 
     while h < h_max:
         T_desc = calcular_thrust_desc(h, aircraft)
@@ -148,9 +155,14 @@ def simulador(aircraft, max_weight):
         m = actualizar_masa(V, T_desc, m, aircraft)
 
         x = x - Vx * dt
-        h = h + Vh * dt      # <-- corregido
+        h = h + Vh * dt
+        segundos_totales += 1
 
         x_list.append(x)
         h_list.append(h)
 
-    return x_list, h_list
+        if tiempo_wp is None and abs(x) >= distancia_objetivo_m:
+            tiempo_wp = segundos_totales
+            altitud_wp = h
+
+    return x_list, h_list, tiempo_wp, altitud_wp
