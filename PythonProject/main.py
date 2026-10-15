@@ -155,6 +155,27 @@ thrust_prueba = calcular_thrust_desc(altura_prueba, avion_prueba)
 print(f"El Thrust de descenso para el {avion_prueba.name} a {altura_prueba} m es: {thrust_prueba:.3f} N")
 
 """
+"""
+# Este es el codigo inicial que realizamos para cumplir la gráfica del PowerPoint
+resultados = {}
+
+for aircraft in aircraft_list:
+    for pct in [100, 80]:
+        max_weight = aircraft.mlw * (pct / 100)
+        x_vals, h_vals = simulador(aircraft, max_weight)
+
+        key = f"{aircraft.name}_{pct}"
+        resultados[key] = (x_vals, h_vals)
+
+        plt.plot(x_vals, h_vals, label=f"{aircraft.name} [{pct}% MLW]")
+
+plt.xlabel("x [m]")
+plt.ylabel("h [m]")
+plt.legend()
+plt.show()
+"""
+
+#Lo siguiente es el codigo que hemos usado para sacar los datos para rellenar los cuadros de datos de los escenarios#
 
 escenario_1 = [
     {"modelo": "B767-300ER", "star": "ALBER1Z", "pct_mlw": 80, "dist_km": 129.08},
@@ -206,10 +227,3 @@ plt.legend(loc="upper left", bbox_to_anchor=(1, 1))
 plt.grid(True)
 plt.tight_layout()
 plt.show()
-
-"""
-si queremos reutilizar las datas de simulador:
-
-x_b737_100_pumal, h_b737_100_pumal = resultados["B737_100_PUMAL1Z"]
-
-"""
