@@ -166,3 +166,11 @@ def simulador(aircraft, max_weight, distancia_star_km):
             altitud_wp = h
 
     return x_list, h_list, tiempo_wp, altitud_wp
+
+def segundos_a_hora(s):
+    s = int(round(s))
+    return f"{s // 3600:02d}:{(s % 3600) // 60:02d}:{s % 60:02d}"
+
+def altura_en_distancia(x_vals, h_vals, dist_km):
+    xs = [abs(x) for x in x_vals]          # x 是负数，取绝对值
+    return np.interp(dist_km * 1000, xs, h_vals)   # 在该距离处插值读取高度
